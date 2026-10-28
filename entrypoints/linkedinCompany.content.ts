@@ -10,7 +10,7 @@ import { mountCaptureButton, unmountCaptureButton } from '../utils/ui/captureBut
  * capture button is shown only on company pages and follows URL changes.
  */
 export default defineContentScript({
-  matches: ['*://*.linkedin.com/*'],
+  matches: ['*://*.linkedin.com/company/*'],
   runAt: 'document_idle',
   main(ctx) {
     const isCompanyPage = () => location.pathname.startsWith('/company/');

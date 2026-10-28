@@ -36,6 +36,24 @@ h1 {
   color: #d93025;
 }
 
+.save-feedback {
+  margin: 0;
+  word-break: break-word;
+}
+
+.save-feedback.loading {
+  color: #5f6368;
+}
+
+.save-feedback.success {
+  color: #188038;
+  font-weight: 600;
+}
+
+.save-feedback.error {
+  color: #d93025;
+}
+
 form {
   display: flex;
   flex-direction: column;

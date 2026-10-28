@@ -6,6 +6,7 @@ const form = document.querySelector<HTMLFormElement>('#capture-form')!;
 const statusEl = document.querySelector<HTMLParagraphElement>('#status')!;
 const statusSelect = document.querySelector<HTMLSelectElement>('#status-select')!;
 const saveBtn = document.querySelector<HTMLButtonElement>('#save-btn')!;
+const saveFeedbackEl = document.querySelector<HTMLParagraphElement>('#save-feedback')!;
 const rescanBtn = document.querySelector<HTMLButtonElement>('#rescan-btn')!;
 const openOptionsLink = document.querySelector<HTMLAnchorElement>('#open-options')!;
 
@@ -40,6 +41,13 @@ function fillForm(data: Partial<ScrapedCompanyData>): void {
 function setStatus(message: string, isError = false): void {
   statusEl.textContent = message;
   statusEl.classList.toggle('error', isError);
+}
+
+/** Save feedback is shown right under the Save button so it is always visible. */
+function setSaveFeedback(message: string, kind: 'loading' | 'success' | 'error'): void {
+  saveFeedbackEl.textContent = message;
+  saveFeedbackEl.className = `status save-feedback ${kind}`;
+  saveFeedbackEl.scrollIntoView({ block: 'nearest' });
 }
 
 async function getActiveTab() {
@@ -113,16 +121,21 @@ async function handleSave(): Promise<void> {
     contactName: String(data.get('contactName') || ''),
   };
 
-  setStatus('Saving…');
+  setSaveFeedback('Saving to your Google Sheet…', 'loading');
   saveBtn.disabled = true;
-  const result = await sendMessage('saveRow', row);
-  saveBtn.disabled = false;
-
-  if (result.ok) {
-    setStatus('Saved to your Google Sheet ✅');
-    await sendMessage('clearPendingCapture', undefined);
-  } else {
-    setStatus(`Error: ${result.error}`, true);
+  saveBtn.textContent = 'Saving…';
+  try {
+    const result = await sendMessage('saveRow', row);
+    if (result.ok) {
+      setSaveFeedback('Saved to your Google Sheet ✅', 'success');
+    } else {
+      setSaveFeedback(`Error: ${result.error}`, 'error');
+    }
+  } catch (error) {
+    setSaveFeedback(`Error: ${(error as Error).message}`, 'error');
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save to Sheet';
   }
 }
 
