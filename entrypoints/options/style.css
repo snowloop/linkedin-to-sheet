@@ -1,0 +1,91 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: #202124;
+  background: #f8f9fa;
+}
+
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+h1 {
+  font-size: 18px;
+}
+
+h2 {
+  font-size: 14px;
+  margin: 24px 0 4px;
+}
+
+.hint {
+  color: #5f6368;
+  font-size: 12px;
+  margin: 0 0 12px;
+}
+
+section,
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: 600;
+  color: #5f6368;
+  font-size: 12px;
+}
+
+input {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid #dadce0;
+  border-radius: 6px;
+  color: #202124;
+  font-weight: 400;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 14px;
+  background: #1a73e8;
+  color: #fff;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+button.secondary {
+  background: #f1f3f4;
+  color: #202124;
+}
+
+.button-row {
+  display: flex;
+  gap: 8px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.status {
+  color: #5f6368;
+  font-size: 12px;
+  min-height: 16px;
+}

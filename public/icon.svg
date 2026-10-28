@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="24" fill="#1a73e8" />
+  <text x="64" y="80" font-family="system-ui, sans-serif" font-size="64" font-weight="700"
+        fill="#ffffff" text-anchor="middle">P</text>
+  <circle cx="96" cy="32" r="18" fill="#34a853" />
+  <text x="96" y="40" font-family="system-ui, sans-serif" font-size="26" font-weight="700"
+        fill="#ffffff" text-anchor="middle">+</text>
+</svg>

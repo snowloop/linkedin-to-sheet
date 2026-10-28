@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Build output
+.output/
+dist/
+*.zip
+*.xpi
+
+# WXT generated
+.wxt/
+
+# Local browser config / profiles for `wxt dev`
+web-ext.config.ts
+.wxt-profile/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Tests / coverage
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# Misc
+*.local
+*.tsbuildinfo

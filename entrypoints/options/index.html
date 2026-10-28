@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prospection Capture — Options</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Prospection Capture — Settings</h1>
+
+      <section>
+        <h2>1. Google account</h2>
+        <p class="hint">
+          Create a Google Cloud OAuth "Desktop app" client with the Google
+          Sheets API enabled, then paste its credentials below. See the
+          README for step-by-step instructions.
+        </p>
+
+        <label>
+          Redirect URI to use if your OAuth provider asks for one
+          <input id="redirect-uri" type="text" readonly />
+        </label>
+
+        <p id="connection-status" class="status"></p>
+        <div class="button-row">
+          <button type="button" id="connect-btn">Connect Google account</button>
+          <button type="button" id="disconnect-btn" class="secondary">Disconnect</button>
+        </div>
+      </section>
+
+      <form id="settings-form">
+        <label>
+          Google OAuth Client ID
+          <input name="clientId" type="text" autocomplete="off" />
+        </label>
+        <label>
+          Google OAuth Client Secret
+          <input name="clientSecret" type="password" autocomplete="off" />
+        </label>
+
+        <h2>2. Google Sheet</h2>
+        <label>
+          Spreadsheet ID
+          <input name="spreadsheetId" type="text" placeholder="From the sheet's URL" />
+        </label>
+        <label>
+          Sheet / tab name
+          <input name="sheetName" type="text" placeholder="Sheet1" />
+        </label>
+
+        <button type="submit" id="save-settings-btn">Save settings</button>
+      </form>
+
+      <p id="save-feedback" class="status"></p>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
