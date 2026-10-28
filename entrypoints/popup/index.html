@@ -1,87 +1,90 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prospection Capture</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <main>
-      <h1>Prospection Capture</h1>
-      <p id="status" class="status"></p>
 
-      <form id="capture-form">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prospection Capture</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <main>
+    <h1>Prospection Capture</h1>
+    <p id="status" class="status"></p>
+
+    <form id="capture-form">
+      <label>
+        Name
+        <input name="name" type="text" required />
+      </label>
+      <label>
+        Website URL
+        <input name="websiteUrl" type="url" />
+      </label>
+      <label>
+        LinkedIn URL
+        <input name="linkedinUrl" type="url" />
+      </label>
+
+
+      <label>
+        Industry
+        <input name="industry" type="text" />
+      </label>
+      <label>
+        Company size
+        <input name="companySize" type="text" />
+      </label>
+
+
+      <label>
+        Location
+        <input name="location" type="text" />
+      </label>
+
+      <div class="row">
         <label>
-          Name
-          <input name="name" type="text" required />
+          Stars
+          <select name="stars">
+            <option value="0">—</option>
+            <option value="1">★</option>
+            <option value="2">★★</option>
+            <option value="3">★★★</option>
+            <option value="4">★★★★</option>
+            <option value="5">★★★★★</option>
+          </select>
         </label>
         <label>
-          Website URL
-          <input name="websiteUrl" type="url" />
+          Status
+          <select name="status" id="status-select"></select>
         </label>
-        <label>
-          LinkedIn URL
-          <input name="linkedinUrl" type="url" />
-        </label>
+      </div>
 
-        <div class="row">
-          <label>
-            Industry
-            <input name="industry" type="text" />
-          </label>
-          <label>
-            Company size
-            <input name="companySize" type="text" />
-          </label>
-        </div>
+      <label>
+        Contact (HR / recruiter LinkedIn URL)
+        <input name="contactUrl" type="url" placeholder="Paste manually" />
+      </label>
+      <label>
+        Contact name / title
+        <input name="contactName" type="text" placeholder="e.g. Jane Doe, Talent Acquisition" />
+      </label>
 
-        <label>
-          Location
-          <input name="location" type="text" />
-        </label>
+      <label>
+        Notes
+        <textarea name="notes" rows="3"></textarea>
+      </label>
 
-        <div class="row">
-          <label>
-            Stars
-            <select name="stars">
-              <option value="0">—</option>
-              <option value="1">★</option>
-              <option value="2">★★</option>
-              <option value="3">★★★</option>
-              <option value="4">★★★★</option>
-              <option value="5">★★★★★</option>
-            </select>
-          </label>
-          <label>
-            Status
-            <select name="status" id="status-select"></select>
-          </label>
-        </div>
+      <button type="submit" id="save-btn">Save to Sheet</button>
+    </form>
 
-        <label>
-          Contact (HR / recruiter LinkedIn URL)
-          <input name="contactUrl" type="url" placeholder="Paste manually" />
-        </label>
-        <label>
-          Contact name / title
-          <input name="contactName" type="text" placeholder="e.g. Jane Doe, Talent Acquisition" />
-        </label>
+    <button type="button" id="rescan-btn" class="secondary">Re-scan current page</button>
 
-        <label>
-          Notes
-          <textarea name="notes" rows="3"></textarea>
-        </label>
+    <footer>
+      <a href="#" id="open-options">Options</a>
+    </footer>
+  </main>
+  <script type="module" src="./main.ts"></script>
+</body>
 
-        <button type="submit" id="save-btn">Save to Sheet</button>
-      </form>
-
-      <button type="button" id="rescan-btn" class="secondary">Re-scan current page</button>
-
-      <footer>
-        <a href="#" id="open-options">Options</a>
-      </footer>
-    </main>
-    <script type="module" src="./main.ts"></script>
-  </body>
 </html>

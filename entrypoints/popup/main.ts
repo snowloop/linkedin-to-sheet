@@ -20,11 +20,20 @@ function field(name: string): HTMLInputElement | HTMLSelectElement | HTMLTextAre
   return form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null;
 }
 
+const SCRAPED_FIELDS: (keyof ScrapedCompanyData)[] = [
+  'name',
+  'websiteUrl',
+  'linkedinUrl',
+  'industry',
+  'companySize',
+  'location',
+];
+
+/** Overwrites every scraped field (empty values clear stale ones); manual fields are untouched. */
 function fillForm(data: Partial<ScrapedCompanyData>): void {
-  for (const [key, value] of Object.entries(data)) {
-    if (!value) continue;
+  for (const key of SCRAPED_FIELDS) {
     const el = field(key);
-    if (el) el.value = String(value);
+    if (el) el.value = data[key] ?? '';
   }
 }
 
@@ -50,10 +59,14 @@ async function rescan(): Promise<void> {
       fillForm(data);
       setStatus('Scraped current page — review and save.');
     } else {
-      setStatus('No prospection data detected here — fill the fields manually.');
+      setStatus('Nothing to scrape on this page — open a company page, or fill the fields manually.');
     }
-  } catch {
-    setStatus('This page is not supported for automatic scraping — fill the fields manually.');
+  } catch (error) {
+    console.error('Rescan failed', error);
+    setStatus(
+      'Cannot read this page. Reload the tab (the extension may have been reloaded), or fill the fields manually.',
+      true,
+    );
   }
 }
 

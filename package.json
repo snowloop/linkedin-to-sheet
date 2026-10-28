@@ -26,6 +26,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.72.1",
     "vitest": "^4.1.10",
+    "web-ext": "^10.8.0",
     "wxt": "^0.21.5"
   }
 }

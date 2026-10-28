@@ -3,6 +3,11 @@ import type { ScrapedCompanyData } from '../types';
 
 const HOST_ID = 'prospection-ext-capture-root';
 
+/** Removes the floating button, e.g. after navigating away from a company page. */
+export function unmountCaptureButton(): void {
+  document.getElementById(HOST_ID)?.remove();
+}
+
 /**
  * Injects a small floating button into the page. Clicking it scrapes the
  * current page (via `scrape`) and sends the result to the background script

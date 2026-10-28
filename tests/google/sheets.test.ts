@@ -63,7 +63,7 @@ describe('saveProspectRow', () => {
     await saveProspectRow(makeRow());
 
     expect(fetchMock).toHaveBeenCalledTimes(4);
-    const [, , , appendCall] = fetchMock.mock.calls;
+    const appendCall = fetchMock.mock.calls[3]!;
     expect(String(appendCall[0])).toContain(':append');
     expect(appendCall[1]?.method).toBe('POST');
   });
@@ -84,7 +84,7 @@ describe('saveProspectRow', () => {
     await saveProspectRow(makeRow());
 
     expect(fetchMock).toHaveBeenCalledTimes(3);
-    const [, , updateCall] = fetchMock.mock.calls;
+    const updateCall = fetchMock.mock.calls[2]!;
     expect(String(updateCall[0])).toContain('A2%3AM2');
     expect(updateCall[1]?.method).toBe('PUT');
   });

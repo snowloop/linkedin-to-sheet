@@ -63,15 +63,14 @@ export async function connectGoogleAccount(): Promise<void> {
   authUrl.searchParams.set('code_challenge', challenge);
   authUrl.searchParams.set('code_challenge_method', 'S256');
 
-  // `redirect_uri` is a documented but sometimes untyped option in older
-  // `browser.identity` type definitions; cast narrowly for this call only.
+  // Firefox reads the redirect URI from the `redirect_uri` query param of the
+  // auth URL; passing it as a separate option throws a TypeError.
   const resultUrl = await browser.identity.launchWebAuthFlow({
     url: authUrl.toString(),
     interactive: true,
-    redirect_uri: redirectUri,
-  } as Parameters<typeof browser.identity.launchWebAuthFlow>[0]);
+  });
 
-  const code = new URL(resultUrl).searchParams.get('code');
+  const code = resultUrl ? new URL(resultUrl).searchParams.get('code') : null;
   if (!code) {
     throw new Error('Google did not return an authorization code.');
   }

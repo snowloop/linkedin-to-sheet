@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif;
@@ -49,6 +55,7 @@ label {
 }
 
 input {
+  width: 100%;
   font: inherit;
   padding: 8px 10px;
   border: 1px solid #dadce0;
