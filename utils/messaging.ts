@@ -11,13 +11,7 @@ import type {
  * script and content scripts. See https://webext-core.aklinker1.io/messaging
  */
 export interface ProtocolMap {
-  /** Content script -> background: store data scraped from the in-page button. */
-  capturePending(data: ScrapedCompanyData): void;
-  /** Popup -> background: read back whatever was last captured. */
-  getPendingCapture(): ScrapedCompanyData | null;
-  /** Popup -> background: clear the pending capture (after a successful save). */
-  clearPendingCapture(): void;
-  /** Popup/background -> content script: re-scrape the current page on demand. */
+  /** Popup -> content script: scrape the current page on demand. */
   scrapeCurrentPage(): ScrapedCompanyData | null;
   /** Popup -> background: append/update the row in the configured Google Sheet. */
   saveRow(data: ProspectRow): SaveRowResult;

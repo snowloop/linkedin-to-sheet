@@ -9,17 +9,14 @@ framework).
 
 ## What it does
 
-- A small floating **"➕ Add to Prospection Sheet"** button is injected on
-  every page (company websites) and on LinkedIn company pages
-  (`linkedin.com/company/...`).
-- Clicking it scrapes best-effort info from the current page (name, website
-  URL, LinkedIn URL, industry, size, location) and stores it as a "pending
-  capture".
-- Click the toolbar icon to open the popup, which loads that pending
-  capture (or re-scans the current page if there isn't one), lets you edit
-  any field, set a **star rating**, a **status**, free-text **notes**, and
-  manually paste an **HR/recruiter contact** (LinkedIn URL + name/title) —
-  then **Save to Sheet**.
+- Open the toolbar popup on a company website or a LinkedIn company page
+  (best on the **À propos / About** tab). It scrapes best-effort info from
+  the current page (name, website URL, LinkedIn URL, industry, size,
+  location) and pre-fills the form. The **Re-scan current page** button
+  scrapes again, e.g. after navigating inside LinkedIn.
+- Edit any field, set a **star rating**, a **status**, free-text **notes**,
+  and manually paste an **HR/recruiter contact** (LinkedIn URL +
+  name/title) — then **Save to Sheet**.
 - Saving calls the Google Sheets API directly (OAuth2, no backend script
   required). If a row already exists for the same website or LinkedIn URL,
   it's updated in place instead of duplicated.
@@ -65,12 +62,13 @@ right person on LinkedIn.
   refresh tokens after 7 days of inactivity or when the test-user list
   changes. If saving starts failing with an auth error, just click
   "Reconnect Google account" in the options page.
-- The content script runs on `<all_urls>` (all websites) so the capture
-  button is available everywhere; Firefox will ask for the broad "access
+- Small content scripts run on all websites so the popup can read the
+  current page; Firefox will ask for the broad "access
   your data for all websites" permission once at install. If you'd rather
   restrict it, edit the `matches` pattern in
   [`entrypoints/generic.content.ts`](entrypoints/generic.content.ts) to a
-  specific allowlist.
+  specific allowlist. Tabs that were already open when the extension was
+  installed or reloaded must be refreshed once before they can be scanned.
 
 ## One-time setup
 
@@ -130,10 +128,11 @@ on demand the first time — if it asks, install it as a dev dependency).
 
 ### 6. Use it
 
-1. Browse to a company website, or a LinkedIn company page.
-2. Click the floating **"➕ Add to Prospection Sheet"** button.
-3. Click the toolbar icon, review/edit the fields, set stars/status/notes,
-   paste the HR contact if you have one, and click **Save to Sheet**.
+1. Browse to a company website, or a LinkedIn company page (the **À propos**
+   tab gives the most data).
+2. Click the toolbar icon: the form is pre-filled from the page.
+3. Review/edit the fields, set stars/status/notes, paste the HR contact if
+   you have one, and click **Save to Sheet**.
 
 ## Development
 
@@ -144,23 +143,4 @@ npm run zip           # Build + zip for distribution
 npm test              # Run unit tests (Vitest)
 npm run typecheck      # Type-check without emitting
 npm run lint           # ESLint
-```
-
-## Project structure
-
-```
-entrypoints/
-  background.ts              # OAuth, Sheets API calls, pending-capture storage
-  generic.content.ts          # Floating button on all non-LinkedIn pages
-  linkedinCompany.content.ts  # Floating button on LinkedIn company pages
-  popup/                      # Toolbar popup (review/edit/save form)
-  options/                    # Settings page (Google OAuth + Sheet config)
-utils/
-  types.ts                    # Shared types (ProspectRow, ScrapedCompanyData, ...)
-  messaging.ts                # Typed message protocol (@webext-core/messaging)
-  storage.ts                  # Pending-capture storage item
-  scraping/                   # Pure, unit-tested DOM scraping functions
-  google/                     # OAuth (PKCE) + Sheets API client
-  ui/captureButton.ts          # In-page floating button (shadow DOM)
-tests/                        # Vitest unit tests for scraping + Sheets logic
 ```

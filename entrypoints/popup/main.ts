@@ -71,20 +71,14 @@ async function rescan(): Promise<void> {
     }
   } catch (error) {
     console.error('Rescan failed', error);
+    const message = error instanceof Error ? error.message : String(error);
+    const noContentScript = /receiving end does not exist|could not establish connection/i.test(message);
     setStatus(
-      'Cannot read this page. Reload the tab (the extension may have been reloaded), or fill the fields manually.',
+      noContentScript
+        ? 'Cannot reach this page. Reload the tab (it was opened before the extension loaded), or fill the fields manually.'
+        : `Scraping failed: ${message}`,
       true,
     );
-  }
-}
-
-async function init(): Promise<void> {
-  const pending = await sendMessage('getPendingCapture', undefined);
-  if (pending) {
-    fillForm(pending);
-    setStatus('Loaded captured data — review and save.');
-  } else {
-    await rescan();
   }
 }
 
@@ -139,4 +133,4 @@ async function handleSave(): Promise<void> {
   }
 }
 
-void init();
+void rescan();
