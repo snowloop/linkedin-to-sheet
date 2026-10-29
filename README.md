@@ -23,6 +23,7 @@ framework).
 
 ### Columns written to the sheet
 
+
 | # | Column | Filled by |
 |---|---|---|
 | A | Name | auto (editable) |
