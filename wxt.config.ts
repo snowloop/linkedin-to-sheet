@@ -3,9 +3,9 @@ import { defineConfig } from 'wxt';
 // See https://wxt.dev/guide/essentials/config/manifest.html
 export default defineConfig({
   manifest: {
-    name: 'Prospection Sheet Capture',
+    name: 'Linkedin to Sheet',
     description:
-      'Capture company info from websites and LinkedIn company pages into a Google Sheet, with manual rating, status and HR contact fields.',
+      'Send company info from LinkedIn company pages and websites to a Google Sheet, with manual rating, status and HR contact fields.',
     permissions: ['storage', 'identity', 'tabs'],
     host_permissions: [
       // Token exchange / refresh endpoint.
@@ -19,7 +19,7 @@ export default defineConfig({
         // `npm run dev` reloads (temporary installs otherwise get a new
         // random ID, and therefore a new redirect URL, every time).
         // Feel free to change this to your own identifier.
-        id: 'prospection-sheet-capture@example.dev',
+        id: 'linkedin-to-sheet@snowloop.com',
         strict_min_version: '109.0',
       },
     },

@@ -1,8 +1,8 @@
 {
-  "name": "prospection-ext",
+  "name": "linkedin-to-sheet",
   "private": true,
   "version": "0.1.0",
-  "description": "Firefox extension that captures company info from websites and LinkedIn company pages into a Google Sheet.",
+  "description": "Firefox extension that sends company info from LinkedIn company pages and websites to a Google Sheet.",
   "type": "module",
   "scripts": {
     "dev": "wxt -b firefox",

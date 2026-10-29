@@ -1,7 +1,7 @@
-# Prospection Sheet Capture
+# Linkedin to Sheet
 
-A Firefox extension that captures company info from a company website or a
-LinkedIn company page, and writes it as a row to a Google Sheet — with a
+A Firefox extension that captures company info from a LinkedIn company page
+or a company website, and writes it as a row to a Google Sheet — with a
 manual star rating, status, notes and HR contact fields.
 
 Built with [WXT](https://wxt.dev/) (Vite + TypeScript based web extension
