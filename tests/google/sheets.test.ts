@@ -13,7 +13,7 @@ vi.mock('../../utils/google/auth', () => ({
   },
 }));
 
-const { saveProspectRow } = await import('../../utils/google/sheets');
+const { saveProspectRow, quoteSheetName } = await import('../../utils/google/sheets');
 
 function makeRow(overrides: Partial<ProspectRow> = {}): ProspectRow {
   return {
@@ -87,5 +87,12 @@ describe('saveProspectRow', () => {
     const updateCall = fetchMock.mock.calls[2]!;
     expect(String(updateCall[0])).toContain('A2%3AM2');
     expect(updateCall[1]?.method).toBe('PUT');
+  });
+});
+
+describe('quoteSheetName', () => {
+  it('single-quotes tab names and doubles inner quotes', () => {
+    expect(quoteSheetName('Mes prospects')).toBe("'Mes prospects'");
+    expect(quoteSheetName("Bob's list")).toBe("'Bob''s list'");
   });
 });

@@ -149,12 +149,16 @@ export async function getValidAccessToken(): Promise<string> {
   });
 
   if (!response.ok) {
-    // Refresh token is likely revoked/expired (e.g. the 7-day limit that
-    // applies to unverified Google Cloud OAuth apps in "Testing" status).
-    await googleTokensItem.removeValue();
-    throw new Error(
-      'Failed to refresh the Google session. Please reconnect your Google account in the options page.',
-    );
+    // 400/401 mean the refresh token is revoked/expired (e.g. the 7-day limit
+    // that applies to unverified OAuth apps in "Testing" status). Other
+    // statuses (429, 5xx) are transient: keep the tokens so a retry can work.
+    if (response.status === 400 || response.status === 401) {
+      await googleTokensItem.removeValue();
+      throw new Error(
+        'Failed to refresh the Google session. Please reconnect your Google account in the options page.',
+      );
+    }
+    throw new Error(`Google token refresh failed (${response.status}). Please try again in a moment.`);
   }
 
   const json = (await response.json()) as {

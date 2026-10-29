@@ -80,18 +80,6 @@ async function rescan(): Promise<void> {
   }
 
 
-  // The extension must be configured and connected before it can save
-  // anything, so say so up front rather than after a successful scrape.
-  const [settings, { connected }] = await Promise.all([
-    googleSettingsItem.getValue(),
-    sendMessage('getConnectionStatus', undefined),
-  ]);
-  const setupProblem = getSetupProblem(settings, connected);
-  if (setupProblem) {
-    setSetupError(setupProblem.message);
-    return;
-  }
-
   // Blank tabs and browser pages can never be scanned: explain it calmly
   // instead of failing with a connection error.
   if (!isScrapableUrl(tab.url)) {
@@ -99,9 +87,19 @@ async function rescan(): Promise<void> {
     return;
   }
 
-
-
   try {
+    // The extension must be configured and connected before it can save
+    // anything, so say so up front rather than after a successful scrape.
+    const [settings, { connected }] = await Promise.all([
+      googleSettingsItem.getValue(),
+      sendMessage('getConnectionStatus', undefined),
+    ]);
+    const setupProblem = getSetupProblem(settings, connected);
+    if (setupProblem) {
+      setSetupError(setupProblem.message);
+      return;
+    }
+
     const data = await sendMessage('scrapeCurrentPage', undefined, tab.id);
     if (data) {
       fillForm(data);

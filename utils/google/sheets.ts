@@ -45,6 +45,11 @@ async function sheetsApiFetch(path: string, init?: RequestInit): Promise<unknown
   return response.json();
 }
 
+/** A1 notation requires tab names with spaces/special characters to be single-quoted. */
+export function quoteSheetName(name: string): string {
+  return `'${name.replace(/'/g, "''")}'`;
+}
+
 /** Creates the header row if the target sheet/tab is empty. */
 async function ensureHeaderRow(spreadsheetId: string, sheetName: string): Promise<void> {
   const range = `${sheetName}!A1:${LAST_COLUMN_LETTER}1`;
@@ -99,7 +104,7 @@ export async function saveProspectRow(row: ProspectRow): Promise<void> {
   if (!settings.spreadsheetId) {
     throw new Error('No spreadsheet configured. Set the Spreadsheet ID on the options page.');
   }
-  const sheetName = settings.sheetName || 'Sheet1';
+  const sheetName = quoteSheetName(settings.sheetName || 'Sheet1');
 
   await ensureHeaderRow(settings.spreadsheetId, sheetName);
   const existingRowIndex = await findExistingRowIndex(settings.spreadsheetId, sheetName, row);
