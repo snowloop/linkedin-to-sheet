@@ -36,6 +36,11 @@ h1 {
   color: #d93025;
 }
 
+.status a {
+  color: #1a73e8;
+  font-weight: 600;
+}
+
 .save-feedback {
   margin: 0;
   word-break: break-word;

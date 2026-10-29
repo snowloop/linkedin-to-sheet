@@ -1,4 +1,6 @@
 import { browser } from 'wxt/browser';
+import { googleSettingsItem } from '../../utils/google/auth';
+import { getSetupProblem } from '../../utils/google/setup';
 import { sendMessage } from '../../utils/messaging';
 import { isScrapableUrl } from '../../utils/scraping/pageSupport';
 import { PROSPECT_STATUSES, type ProspectRow, type ScrapedCompanyData } from '../../utils/types';
@@ -44,6 +46,20 @@ function setStatus(message: string, isError = false): void {
   statusEl.classList.toggle('error', isError);
 }
 
+/** Error that the user fixes in the options page: shows the message plus a shortcut link. */
+function setSetupError(message: string): void {
+  setStatus(`${message} `, true);
+
+  const link = document.createElement('a');
+  link.href = '#';
+  link.textContent = 'Open options';
+  link.addEventListener('click', (event) => {
+    event.preventDefault();
+    void browser.runtime.openOptionsPage();
+  });
+  statusEl.append(link);
+}
+
 /** Save feedback is shown right under the Save button so it is always visible. */
 function setSaveFeedback(message: string, kind: 'loading' | 'success' | 'error'): void {
   saveFeedbackEl.textContent = message;
@@ -63,12 +79,27 @@ async function rescan(): Promise<void> {
     return;
   }
 
+
+  // The extension must be configured and connected before it can save
+  // anything, so say so up front rather than after a successful scrape.
+  const [settings, { connected }] = await Promise.all([
+    googleSettingsItem.getValue(),
+    sendMessage('getConnectionStatus', undefined),
+  ]);
+  const setupProblem = getSetupProblem(settings, connected);
+  if (setupProblem) {
+    setSetupError(setupProblem.message);
+    return;
+  }
+
   // Blank tabs and browser pages can never be scanned: explain it calmly
   // instead of failing with a connection error.
   if (!isScrapableUrl(tab.url)) {
     setStatus('Nothing to scan on this tab. Open a company website or a LinkedIn company page, or fill the fields manually.');
     return;
   }
+
+
 
   try {
     const data = await sendMessage('scrapeCurrentPage', undefined, tab.id);
