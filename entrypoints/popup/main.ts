@@ -1,5 +1,6 @@
 import { browser } from 'wxt/browser';
 import { sendMessage } from '../../utils/messaging';
+import { isScrapableUrl } from '../../utils/scraping/pageSupport';
 import { PROSPECT_STATUSES, type ProspectRow, type ScrapedCompanyData } from '../../utils/types';
 
 const form = document.querySelector<HTMLFormElement>('#capture-form')!;
@@ -61,6 +62,14 @@ async function rescan(): Promise<void> {
     setStatus('No active tab found.', true);
     return;
   }
+
+  // Blank tabs and browser pages can never be scanned: explain it calmly
+  // instead of failing with a connection error.
+  if (!isScrapableUrl(tab.url)) {
+    setStatus('Nothing to scan on this tab. Open a company website or a LinkedIn company page, or fill the fields manually.');
+    return;
+  }
+
   try {
     const data = await sendMessage('scrapeCurrentPage', undefined, tab.id);
     if (data) {
@@ -75,7 +84,7 @@ async function rescan(): Promise<void> {
     const noContentScript = /receiving end does not exist|could not establish connection/i.test(message);
     setStatus(
       noContentScript
-        ? 'Cannot reach this page. Reload the tab (it was opened before the extension loaded), or fill the fields manually.'
+        ? 'This tab was opened before the extension loaded. Reload it, then click "Re-scan current page".'
         : `Scraping failed: ${message}`,
       true,
     );
