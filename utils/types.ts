@@ -40,7 +40,7 @@ export const PROSPECT_STATUSES: readonly ProspectStatus[] = [
 export interface ProspectRow extends ScrapedCompanyData {
   /** 0 = not rated, 1-5 = star rating. */
   stars: number;
-  /** ISO date string, set when the row is saved. */
+  /** DD/MM/YYYY, set when the row is saved. */
   dateAdded: string;
   status: ProspectStatus;
   notes: string;

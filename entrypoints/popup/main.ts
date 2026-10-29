@@ -1,6 +1,7 @@
 import { browser } from 'wxt/browser';
 import { googleSettingsItem } from '../../utils/google/auth';
 import { getSetupProblem } from '../../utils/google/setup';
+import { formatDate } from '../../utils/date';
 import { sendMessage } from '../../utils/messaging';
 import { isScrapableUrl } from '../../utils/scraping/pageSupport';
 import { PROSPECT_STATUSES, type ProspectRow, type ScrapedCompanyData } from '../../utils/types';
@@ -142,7 +143,7 @@ async function handleSave(): Promise<void> {
     websiteUrl,
     linkedinUrl,
     stars: Number(data.get('stars') || 0),
-    dateAdded: new Date().toISOString(),
+    dateAdded: formatDate(new Date()),
     industry: String(data.get('industry') || ''),
     companySize: String(data.get('companySize') || ''),
     location: String(data.get('location') || ''),
