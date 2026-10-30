@@ -20,7 +20,11 @@ export default defineConfig({
         // random ID, and therefore a new redirect URL, every time).
         // Feel free to change this to your own identifier.
         id: 'linkedin-to-sheet@snowloop.com',
-        strict_min_version: '109.0',
+        strict_min_version: '159.0',
+        data_collection_permissions: {
+          required: ['none'],
+          optional: [],
+        }
       },
     },
     icons: {
