@@ -91,6 +91,58 @@ describe('extractLinkedInCompanyInfo', () => {
     expect(result.websiteUrl).toBe('');
   });
 
+  it('extracts fields from the current obfuscated "À propos" markup (no dl/h1)', () => {
+    const doc = makeDoc(`
+      <html><head><title>La Fourche : À propos | LinkedIn</title></head><body>
+        <main>
+          <h2>La Fourche</h2>
+          <div>
+            <p>Commerce de détail</p><p aria-hidden="true">·</p>
+            <p>Paris, Île-de-France</p><p aria-hidden="true">·</p>
+            <p>17 k<!-- --> abonnés</p><p aria-hidden="true">·</p>
+            <p><a href="https://www.linkedin.com/search/">51-200 employés</a></p>
+          </div>
+          <div><p>Une longue description.</p>
+            <div><div><p>Site web</p></div><div><a href="https://www.linkedin.com/safety/go/?url=http%3A%2F%2Fwww%2Elafourche%2Efr&amp;urlhash=x"><p>http://www.lafourche.fr</p></a></div></div>
+            <div><div><p>Téléphone</p></div><div><a href="tel:0033972274045"><p>0033972274045</p></a></div></div>
+            <div><div><p>Secteur</p></div><div><p>Commerce de détail</p></div></div>
+            <div><div><p>Taille de l’entreprise</p></div><div><p>51 - 200 employés</p></div><div><p><a href="#">162 membres associés</a></p></div></div>
+            <div><div><p>Siège social</p></div><div><p>Paris, Île-de-France</p></div></div>
+          </div>
+        </main>
+      </body></html>
+    `);
+
+    const result = extractLinkedInCompanyInfo(doc, 'https://www.linkedin.com/company/lafourche/about/');
+
+    expect(result).toEqual({
+      name: 'La Fourche',
+      websiteUrl: 'http://www.lafourche.fr',
+      linkedinUrl: 'https://www.linkedin.com/company/lafourche/',
+      industry: 'Commerce de détail',
+      companySize: '51 - 200 employés',
+      location: 'Paris, Île-de-France',
+      sourcePage: 'https://www.linkedin.com/company/lafourche/about/',
+    });
+  });
+
+  it('falls back to the "·"-separated header line with the current markup', () => {
+    const doc = makeDoc(`
+      <html><head><title>La Fourche | LinkedIn</title></head><body>
+        <div>
+          <p>Commerce de détail</p><p>·</p><p>Paris, Île-de-France</p><p>·</p>
+          <p>17 k abonnés</p><p>·</p><p><a href="#">51-200 employés</a></p>
+        </div>
+      </body></html>
+    `);
+
+    const result = extractLinkedInCompanyInfo(doc, 'https://www.linkedin.com/company/lafourche/');
+
+    expect(result.industry).toBe('Commerce de détail');
+    expect(result.location).toBe('Paris, Île-de-France');
+    expect(result.companySize).toBe('51-200 employés');
+  });
+
   it('cleans the document title when there is no h1', () => {
     const doc = makeDoc('<html><head><title>(3) Acme Inc : À propos | LinkedIn</title></head><body></body></html>');
     const result = extractLinkedInCompanyInfo(doc, 'https://www.linkedin.com/company/acme/');

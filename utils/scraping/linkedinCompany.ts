@@ -5,12 +5,15 @@ import type { ScrapedCompanyData } from '../types';
  * Extraction of company info from a LinkedIn company page
  * (`linkedin.com/company/...`).
  *
- * The "À propos" / "About" page renders a definition list:
- *   <dl><dt><h3>Site web</h3></dt><dd>...</dd><dt><h3>Secteur</h3></dt><dd>...</dd>...</dl>
+ * The "À propos" / "About" page lists its fields as label/value rows. Two
+ * markups are supported:
+ *   - legacy: <dl><dt><h3>Site web</h3></dt><dd>...</dd>...</dl>
+ *   - current (SDUI, obfuscated class names, no semantic tags):
+ *     <div><div><p>Site web</p></div><div><a href="...">...</a></div></div>
  * so fields are found by their (FR/EN) label text, never by CSS classes,
- * which LinkedIn changes often. The header info list (industry, location,
+ * which LinkedIn changes often. The header info line (industry, location,
  * followers, size) is used as a fallback on other company tabs, where the
- * definition list is not rendered. Every field stays editable in the popup.
+ * rows are not rendered. Every field stays editable in the popup.
  */
 
 type Field = 'website' | 'industry' | 'companySize' | 'location';
@@ -34,32 +37,57 @@ function normalizeLabel(text: string | null): string {
     .toLowerCase();
 }
 
-function readDefinitionList(doc: Document): Partial<Record<Field, Element>> {
-  const values: Partial<Record<Field, Element>> = {};
-
-  for (const dt of Array.from(doc.querySelectorAll('dt'))) {
-    const label = normalizeLabel(dt.textContent);
-    const field = (Object.keys(LABELS) as Field[]).find((key) => LABELS[key].test(label));
-    if (!field || values[field]) continue;
-
+/** The element holding the value of a label: the next `<dd>` (legacy) or the sibling of the label's wrapper. */
+function findValueElement(label: Element): Element | null {
+  if (label.localName === 'dt') {
     // The value is the first <dd> before the next <dt> (size has several <dd>).
-    let sibling = dt.nextElementSibling;
+    let sibling = label.nextElementSibling;
     while (sibling && sibling.localName !== 'dd' && sibling.localName !== 'dt') {
       sibling = sibling.nextElementSibling;
     }
-    if (sibling?.localName === 'dd') values[field] = sibling;
+    return sibling?.localName === 'dd' ? sibling : null;
+  }
+  return label.parentElement?.nextElementSibling ?? null;
+}
+
+function readDefinitionList(doc: Document): Partial<Record<Field, Element>> {
+  const values: Partial<Record<Field, Element>> = {};
+
+  for (const label of Array.from(doc.querySelectorAll('dt, p'))) {
+    const text = normalizeLabel(label.textContent);
+    const field = (Object.keys(LABELS) as Field[]).find((key) => LABELS[key].test(text));
+    if (!field || values[field]) continue;
+
+    const value = findValueElement(label);
+    if (value) values[field] = value;
   }
 
   return values;
 }
 
-/** Header info list: e.g. ["Services et conseil", "Neuilly-sur-Seine", "3 K abonnés", "11-50 employés"]. */
-function readTopCard(doc: Document): Partial<Record<Field, string>> {
-  const items = Array.from(
+const SEPARATOR = '·';
+
+/** Header info line: e.g. ["Services et conseil", "Neuilly-sur-Seine", "3 K abonnés", "11-50 employés"]. */
+function readTopCardItems(doc: Document): string[] {
+  const legacy = Array.from(
     doc.querySelectorAll('.org-top-card-summary-info-list__info-item'),
   )
     .map((el) => cleanText(el.textContent))
     .filter(Boolean);
+  if (legacy.length) return legacy;
+
+  // Current markup: items are siblings separated by "·" elements.
+  for (const separator of Array.from(doc.querySelectorAll('p'))) {
+    if (cleanText(separator.textContent) !== SEPARATOR || !separator.parentElement) continue;
+    return Array.from(separator.parentElement.children)
+      .map((el) => cleanText(el.textContent))
+      .filter((text) => text && text !== SEPARATOR);
+  }
+  return [];
+}
+
+function readTopCard(doc: Document): Partial<Record<Field, string>> {
+  const items = readTopCardItems(doc);
 
   const size = items.find((item) => SIZE_PATTERN.test(item));
   const rest = items.filter((item) => !SIZE_PATTERN.test(item) && !FOLLOWERS_PATTERN.test(item));
@@ -67,9 +95,9 @@ function readTopCard(doc: Document): Partial<Record<Field, string>> {
   return { companySize: size, industry: rest[0], location: rest[1] };
 }
 
-/** LinkedIn may wrap external links in /redir/redirect?url=...; return the real target. */
+/** LinkedIn wraps external links in /redir/redirect?url=... or /safety/go/?url=...; return the real target. */
 function unwrapRedirect(href: string): string {
-  if (!/linkedin\.com\/redir\/redirect/i.test(href)) return href;
+  if (!/linkedin\.com\/(redir\/redirect|safety\/go)/i.test(href)) return href;
   try {
     return new URL(href).searchParams.get('url') ?? href;
   } catch {
