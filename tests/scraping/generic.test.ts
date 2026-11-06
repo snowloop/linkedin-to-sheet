@@ -18,7 +18,6 @@ describe('extractGenericCompanyInfo', () => {
 
     expect(result.name).toBe('Acme Inc');
     expect(result.websiteUrl).toBe('https://acme.example/');
-    expect(result.sourcePage).toBe('https://acme.example/');
   });
 
   it('falls back to <h1> then <title> when no meta tags are present', () => {

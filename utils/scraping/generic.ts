@@ -27,7 +27,6 @@ export function extractGenericCompanyInfo(
     linkedinUrl,
     industry: '',
     companySize: '',
-    location: '',
-    sourcePage: pageUrl,
+    location: ''
   };
 }

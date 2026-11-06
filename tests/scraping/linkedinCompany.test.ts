@@ -26,7 +26,6 @@ describe('extractLinkedInCompanyInfo', () => {
       industry: 'Services et conseil en informatique',
       companySize: '11-50 employés',
       location: 'Neuilly-sur-Seine, Île-de-France',
-      sourcePage: 'https://www.linkedin.com/company/eversa/about/?viewAsMember=true',
     });
   });
 
@@ -122,7 +121,6 @@ describe('extractLinkedInCompanyInfo', () => {
       industry: 'Commerce de détail',
       companySize: '51 - 200 employés',
       location: 'Paris, Île-de-France',
-      sourcePage: 'https://www.linkedin.com/company/lafourche/about/',
     });
   });
 

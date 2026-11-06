@@ -4,22 +4,14 @@ import { getSetupProblem } from '../../utils/google/setup';
 import { formatDate } from '../../utils/date';
 import { sendMessage } from '../../utils/messaging';
 import { isScrapableUrl } from '../../utils/scraping/pageSupport';
-import { PROSPECT_STATUSES, type ProspectRow, type ScrapedCompanyData } from '../../utils/types';
+import type { ProspectRow, ScrapedCompanyData } from '../../utils/types';
 
 const form = document.querySelector<HTMLFormElement>('#capture-form')!;
 const statusEl = document.querySelector<HTMLParagraphElement>('#status')!;
-const statusSelect = document.querySelector<HTMLSelectElement>('#status-select')!;
 const saveBtn = document.querySelector<HTMLButtonElement>('#save-btn')!;
 const saveFeedbackEl = document.querySelector<HTMLParagraphElement>('#save-feedback')!;
 const rescanBtn = document.querySelector<HTMLButtonElement>('#rescan-btn')!;
 const openOptionsLink = document.querySelector<HTMLAnchorElement>('#open-options')!;
-
-for (const option of PROSPECT_STATUSES) {
-  const el = document.createElement('option');
-  el.value = option;
-  el.textContent = option;
-  statusSelect.append(el);
-}
 
 function field(name: string): HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null {
   return form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null;
@@ -142,16 +134,11 @@ async function handleSave(): Promise<void> {
     name: String(data.get('name') || ''),
     websiteUrl,
     linkedinUrl,
-    stars: Number(data.get('stars') || 0),
     dateAdded: formatDate(new Date()),
     industry: String(data.get('industry') || ''),
     companySize: String(data.get('companySize') || ''),
     location: String(data.get('location') || ''),
-    status: String(data.get('status') || PROSPECT_STATUSES[0]) as ProspectRow['status'],
     notes: String(data.get('notes') || ''),
-    sourcePage: websiteUrl || linkedinUrl,
-    contactUrl: String(data.get('contactUrl') || ''),
-    contactName: String(data.get('contactName') || ''),
   };
 
   setSaveFeedback('Saving to your Google Sheet…', 'loading');

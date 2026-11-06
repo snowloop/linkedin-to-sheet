@@ -8,16 +8,11 @@ export const SHEET_HEADER_LABELS = [
   'Name',
   'Website URL',
   'LinkedIn URL',
-  'Stars',
   'Date Added',
   'Industry',
   'Company Size',
   'Location',
-  'Status',
   'Notes',
-  'Source Page',
-  'Contact (HR LinkedIn)',
-  'Contact Name / Title',
 ] satisfies readonly string[];
 
 const LAST_COLUMN_LETTER = 'M'; // Must match SHEET_COLUMNS.length (13 columns -> A..M).

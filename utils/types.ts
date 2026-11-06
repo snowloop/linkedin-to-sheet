@@ -10,8 +10,6 @@ export interface ScrapedCompanyData {
   industry: string;
   companySize: string;
   location: string;
-  /** URL of the page the data was scraped from, for traceability. */
-  sourcePage: string;
 }
 
 export type ProspectStatus =
@@ -38,16 +36,9 @@ export const PROSPECT_STATUSES: readonly ProspectStatus[] = [
  * editable.
  */
 export interface ProspectRow extends ScrapedCompanyData {
-  /** 0 = not rated, 1-5 = star rating. */
-  stars: number;
   /** DD/MM/YYYY, set when the row is saved. */
   dateAdded: string;
-  status: ProspectStatus;
   notes: string;
-  /** HR / recruiter LinkedIn profile URL, pasted in manually. */
-  contactUrl: string;
-  /** HR / recruiter name and/or title, typed in manually. */
-  contactName: string;
 }
 
 /**
@@ -59,16 +50,11 @@ export const SHEET_COLUMNS = [
   'name',
   'websiteUrl',
   'linkedinUrl',
-  'stars',
   'dateAdded',
   'industry',
   'companySize',
   'location',
-  'status',
   'notes',
-  'sourcePage',
-  'contactUrl',
-  'contactName',
 ] as const satisfies readonly (keyof ProspectRow)[];
 
 export interface GoogleAuthTokens {

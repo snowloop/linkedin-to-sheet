@@ -20,16 +20,11 @@ function makeRow(overrides: Partial<ProspectRow> = {}): ProspectRow {
     name: 'Acme',
     websiteUrl: 'https://acme.example/',
     linkedinUrl: 'https://www.linkedin.com/company/acme/',
-    stars: 4,
     dateAdded: '01/01/2024',
     industry: 'Software',
     companySize: '51-200 employees',
     location: 'Paris',
-    status: 'To contact',
     notes: '',
-    sourcePage: 'https://acme.example/',
-    contactUrl: '',
-    contactName: '',
     ...overrides,
   };
 }

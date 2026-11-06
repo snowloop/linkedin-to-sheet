@@ -155,6 +155,5 @@ export function extractLinkedInCompanyInfo(
     industry: definitionText('industry') || topCard.industry || '',
     companySize: definitionText('companySize') || topCard.companySize || '',
     location: definitionText('location') || topCard.location || '',
-    sourcePage: pageUrl,
   };
 }
