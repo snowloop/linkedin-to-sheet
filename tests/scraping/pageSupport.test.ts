@@ -19,8 +19,9 @@ describe('isScrapableUrl', () => {
     expect(isScrapableUrl('file:///Users/me/page.html')).toBe(false);
   });
 
-  it('rejects sites where Firefox blocks content scripts', () => {
+  it('rejects sites where browsers block content scripts', () => {
     expect(isScrapableUrl('https://addons.mozilla.org/fr/firefox/')).toBe(false);
+    expect(isScrapableUrl('https://chromewebstore.google.com/detail/abc')).toBe(false);
   });
 
   it('rejects malformed URLs', () => {

@@ -1,10 +1,10 @@
-/** Hosts where Firefox forbids content scripts, even though the URL is http(s). */
-const RESTRICTED_HOSTS = ['addons.mozilla.org'];
+/** Hosts where browsers forbid content scripts, even though the URL is http(s). */
+const RESTRICTED_HOSTS = ['addons.mozilla.org', 'chromewebstore.google.com', 'chrome.google.com'];
 
 /**
  * Whether the extension's content scripts can run on this tab. Blank tabs,
  * `about:` / `moz-extension:` / `view-source:` pages, `file:` URLs and a few
- * Mozilla-owned sites can never be scanned, so the popup shouldn't even try.
+ * browser-vendor sites can never be scanned, so the popup shouldn't even try.
  */
 export function isScrapableUrl(url: string | undefined): boolean {
   if (!url) return false;

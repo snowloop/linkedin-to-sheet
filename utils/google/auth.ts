@@ -23,16 +23,18 @@ export const googleTokensItem = storage.defineItem<GoogleAuthTokens | null>(
 /**
  * Builds the redirect URI used for the OAuth flow.
  *
- * Google only accepts redirect URIs on domains it can verify, so the
- * default `https://<id>.extensions.allizom.org/` URL returned by
- * `browser.identity.getRedirectURL()` is rejected by Google's OAuth servers.
- * Starting with Firefox 86, a loopback alternative is allowed instead:
- * `http://127.0.0.1/mozoauth2/<same subdomain>`. See
+ * Firefox: Google rejects the default `https://<id>.extensions.allizom.org/`
+ * URL, but since Firefox 86 a loopback alternative is allowed:
+ * `http://127.0.0.1/mozoauth2/<same subdomain>` (accepted by "Desktop app"
+ * clients). See
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/identity
- * ("Getting the redirect URL").
+ *
+ * Chrome: `https://<extension id>.chromiumapp.org/`, which must be registered
+ * as an authorized redirect URI on a "Web application" client.
  */
 export function getGoogleRedirectUri(): string {
   const defaultRedirect = browser.identity.getRedirectURL();
+  if (!import.meta.env.FIREFOX) return defaultRedirect;
   const subdomain = new URL(defaultRedirect).hostname.split('.')[0];
   return `http://127.0.0.1/mozoauth2/${subdomain}`;
 }
@@ -59,8 +61,8 @@ export async function connectGoogleAccount(): Promise<void> {
   authUrl.searchParams.set('code_challenge', challenge);
   authUrl.searchParams.set('code_challenge_method', 'S256');
 
-  // Firefox reads the redirect URI from the `redirect_uri` query param of the
-  // auth URL; passing it as a separate option throws a TypeError.
+  // The redirect URI is read from the `redirect_uri` query param of the auth
+  // URL; Firefox throws a TypeError if it is passed as a separate option.
   const resultUrl = await browser.identity.launchWebAuthFlow({
     url: authUrl.toString(),
     interactive: true,

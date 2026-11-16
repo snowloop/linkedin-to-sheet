@@ -78,7 +78,7 @@ describe('saveProspectRow', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(3);
     const updateCall = fetchMock.mock.calls[2]!;
-    expect(String(updateCall[0])).toContain('A2%3AM2');
+    expect(String(updateCall[0])).toContain('A2%3AH2');
     expect(updateCall[1]?.method).toBe('PUT');
   });
 });

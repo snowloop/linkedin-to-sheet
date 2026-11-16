@@ -97,10 +97,11 @@ the `.wxt/` folder with TypeScript types for `wxt.config.ts`'s
    uses the installed-app/PKCE flow with a loopback redirect URI
    (`http://127.0.0.1/mozoauth2/...`), which only "Desktop app" clients
    accept without manual redirect-URI registration.
-5. Copy `.env.example` to `.env` and paste the **Client ID** and **Client
-   Secret** into `WXT_GOOGLE_CLIENT_ID` / `WXT_GOOGLE_CLIENT_SECRET`. They
-   are baked into the extension at build time; users never see or enter
-   them. `.env` is git-ignored. Rebuild after changing it.
+5. Copy `.env.example` to `.env.firefox` and paste the **Client ID** and
+   **Client Secret** into `WXT_GOOGLE_CLIENT_ID` / `WXT_GOOGLE_CLIENT_SECRET`.
+   They are baked into the extension at build time; users never see or
+   enter them. `.env.*` files are git-ignored. Rebuild after changing them.
+   (Chrome uses a different client, see "Chrome" below.)
 
 ### 3. Prepare your Google Sheet
 
@@ -140,11 +141,32 @@ on demand the first time — if it asks, install it as a dev dependency).
 3. Review/edit the fields, set stars/status/notes, paste the HR contact if
    you have one, and click **Save to Sheet**.
 
+## Chrome
+
+The same code base builds for Chrome (Manifest V3).
+
+1. In the Google Cloud Console, create a second OAuth client of type **Web
+   application** (Firefox's "Desktop app" client does not accept the
+   `chromiumapp.org` redirect). Put its ID/secret in `.env.chrome`.
+2. Find the extension ID: load `.output/chrome-mv3` unpacked via
+   `chrome://extensions` (for local tests), or upload a first draft to the
+   Chrome Web Store developer dashboard (the published ID is permanent).
+3. Add `https://<extension-id>.chromiumapp.org/` to the client's
+   **Authorized redirect URIs**. For local tests the unpacked ID changes if
+   you move the folder; the published ID never changes.
+4. `pnpm build:chrome` to test, `pnpm zip:chrome` to produce the zip to
+   upload. The store listing needs a privacy policy URL (the extension
+   handles Google account data) and a justification for the "all sites"
+   content-script access.
+
 ## Development
 
 ```sh
 npm run dev          # Run in Firefox with hot reload
 npm run build         # Production build (dist in .output/firefox-mv2)
+npm run dev:chrome    # Run in Chrome
+npm run build:chrome  # Chrome build (.output/chrome-mv3)
+npm run zip:chrome    # Zip for the Chrome Web Store
 npm run zip           # Build + zip for distribution
 npm test              # Run unit tests (Vitest)
 npm run typecheck      # Type-check without emitting
