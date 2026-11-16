@@ -13,15 +13,8 @@
       <section>
         <h2>1. Google account</h2>
         <p class="hint">
-          Create a Google Cloud OAuth "Desktop app" client with the Google
-          Sheets API enabled, then paste its credentials below. See the
-          README for step-by-step instructions.
+          Connect the Google account that owns the spreadsheet below.
         </p>
-
-        <label>
-          Redirect URI to use if your OAuth provider asks for one
-          <input id="redirect-uri" type="text" readonly />
-        </label>
 
         <p id="connection-status" class="status"></p>
         <div class="button-row">
@@ -31,15 +24,6 @@
       </section>
 
       <form id="settings-form">
-        <label>
-          Google OAuth Client ID
-          <input name="clientId" type="text" autocomplete="off" />
-        </label>
-        <label>
-          Google OAuth Client Secret
-          <input name="clientSecret" type="password" autocomplete="off" />
-        </label>
-
         <h2>2. Google Sheet</h2>
         <label>
           Spreadsheet ID

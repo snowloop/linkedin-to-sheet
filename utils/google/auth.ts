@@ -1,6 +1,7 @@
 import { browser } from 'wxt/browser';
 import { storage } from 'wxt/utils/storage';
 import type { GoogleAuthTokens, GoogleSettings } from '../types';
+import { assertGoogleClientConfigured, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from './config';
 import { generatePkcePair } from './pkce';
 
 const GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -10,7 +11,7 @@ const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 export const googleSettingsItem = storage.defineItem<GoogleSettings>(
   'local:googleSettings',
   {
-    fallback: { clientId: '', clientSecret: '', spreadsheetId: '', sheetName: 'Sheet1' },
+    fallback: { spreadsheetId: '', sheetName: 'Sheet1' },
   },
 );
 
@@ -43,18 +44,13 @@ export function getGoogleRedirectUri(): string {
  * page).
  */
 export async function connectGoogleAccount(): Promise<void> {
-  const settings = await googleSettingsItem.getValue();
-  if (!settings.clientId) {
-    throw new Error(
-      'Missing Google OAuth Client ID. Configure it on the extension options page first.',
-    );
-  }
+  assertGoogleClientConfigured();
 
   const { verifier, challenge } = await generatePkcePair();
   const redirectUri = getGoogleRedirectUri();
 
   const authUrl = new URL(GOOGLE_AUTH_ENDPOINT);
-  authUrl.searchParams.set('client_id', settings.clientId);
+  authUrl.searchParams.set('client_id', GOOGLE_CLIENT_ID);
   authUrl.searchParams.set('redirect_uri', redirectUri);
   authUrl.searchParams.set('response_type', 'code');
   authUrl.searchParams.set('scope', SHEETS_SCOPE);
@@ -75,18 +71,17 @@ export async function connectGoogleAccount(): Promise<void> {
     throw new Error('Google did not return an authorization code.');
   }
 
-  await exchangeCodeForTokens(code, verifier, redirectUri, settings);
+  await exchangeCodeForTokens(code, verifier, redirectUri);
 }
 
 async function exchangeCodeForTokens(
   code: string,
   verifier: string,
   redirectUri: string,
-  settings: GoogleSettings,
 ): Promise<void> {
   const body = new URLSearchParams({
-    client_id: settings.clientId,
-    client_secret: settings.clientSecret,
+    client_id: GOOGLE_CLIENT_ID,
+    client_secret: GOOGLE_CLIENT_SECRET,
     code,
     code_verifier: verifier,
     grant_type: 'authorization_code',
@@ -134,10 +129,10 @@ export async function getValidAccessToken(): Promise<string> {
     );
   }
 
-  const settings = await googleSettingsItem.getValue();
+  assertGoogleClientConfigured();
   const body = new URLSearchParams({
-    client_id: settings.clientId,
-    client_secret: settings.clientSecret,
+    client_id: GOOGLE_CLIENT_ID,
+    client_secret: GOOGLE_CLIENT_SECRET,
     refresh_token: tokens.refreshToken,
     grant_type: 'refresh_token',
   });

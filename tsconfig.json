@@ -4,5 +4,5 @@
     "strict": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["entrypoints", "utils", "tests", "wxt.config.ts", "vitest.config.ts"]
+  "include": ["env.d.ts", "entrypoints", "utils", "tests", "wxt.config.ts", "vitest.config.ts"]
 }

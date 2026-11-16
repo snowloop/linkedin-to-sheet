@@ -1,11 +1,10 @@
-import { getGoogleRedirectUri, googleSettingsItem } from '../../utils/google/auth';
+import { googleSettingsItem } from '../../utils/google/auth';
 import { sendMessage } from '../../utils/messaging';
 
 const form = document.querySelector<HTMLFormElement>('#settings-form')!;
 const connectBtn = document.querySelector<HTMLButtonElement>('#connect-btn')!;
 const disconnectBtn = document.querySelector<HTMLButtonElement>('#disconnect-btn')!;
 const connectionStatusEl = document.querySelector<HTMLParagraphElement>('#connection-status')!;
-const redirectUriInput = document.querySelector<HTMLInputElement>('#redirect-uri')!;
 const saveFeedbackEl = document.querySelector<HTMLParagraphElement>('#save-feedback')!;
 
 function field(name: string): HTMLInputElement {
@@ -20,17 +19,8 @@ async function refreshConnectionStatus(): Promise<void> {
 
 async function init(): Promise<void> {
   const settings = await googleSettingsItem.getValue();
-  field('clientId').value = settings.clientId;
-  field('clientSecret').value = settings.clientSecret;
   field('spreadsheetId').value = settings.spreadsheetId;
   field('sheetName').value = settings.sheetName;
-
-  // This is the actual loopback redirect URI the OAuth flow uses (see
-  // `getGoogleRedirectUri` for why it differs from the raw
-  // `browser.identity.getRedirectURL()` value). Google's "Desktop app"
-  // client type accepts it automatically, no manual registration needed —
-  // shown here mainly for debugging / in case you swap in another provider.
-  redirectUriInput.value = getGoogleRedirectUri();
 
   await refreshConnectionStatus();
 }
@@ -42,8 +32,6 @@ form.addEventListener('submit', (event) => {
 
 async function handleSaveSettings(): Promise<void> {
   await googleSettingsItem.setValue({
-    clientId: field('clientId').value.trim(),
-    clientSecret: field('clientSecret').value.trim(),
     spreadsheetId: field('spreadsheetId').value.trim(),
     sheetName: field('sheetName').value.trim() || 'Sheet1',
   });

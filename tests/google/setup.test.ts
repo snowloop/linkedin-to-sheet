@@ -3,8 +3,6 @@ import { getSetupProblem } from '../../utils/google/setup';
 import type { GoogleSettings } from '../../utils/types';
 
 const complete: GoogleSettings = {
-  clientId: 'id',
-  clientSecret: 'secret',
   spreadsheetId: 'sheet-123',
   sheetName: 'Sheet1',
 };
@@ -20,7 +18,7 @@ describe('getSetupProblem', () => {
 
   it('reports a not-configured message when every required option is empty', () => {
     const problem = getSetupProblem(
-      { clientId: '', clientSecret: '', spreadsheetId: '', sheetName: 'Sheet1' },
+      { spreadsheetId: '', sheetName: 'Sheet1' },
       false,
     );
 
@@ -28,18 +26,15 @@ describe('getSetupProblem', () => {
     expect(problem?.message).toContain('not configured yet');
   });
 
-  it('lists exactly the missing options when only some are filled', () => {
-    const problem = getSetupProblem({ ...complete, clientSecret: '', spreadsheetId: '  ' }, true);
+  it('treats a blank spreadsheet ID as missing', () => {
+    const problem = getSetupProblem({ ...complete, spreadsheetId: '  ' }, true);
 
-    expect(problem).toMatchObject({
-      kind: 'missing-settings',
-      missing: ['Client Secret', 'Spreadsheet ID'],
-    });
-    expect(problem?.message).toContain('Client Secret, Spreadsheet ID');
+    expect(problem).toMatchObject({ kind: 'missing-settings', missing: ['Spreadsheet ID'] });
+    expect(problem?.message).toContain('Spreadsheet ID');
   });
 
   it('reports missing options before the connection problem', () => {
-    expect(getSetupProblem({ ...complete, clientId: '' }, false)?.kind).toBe('missing-settings');
+    expect(getSetupProblem({ ...complete, spreadsheetId: '' }, false)?.kind).toBe('missing-settings');
   });
 
   it('reports not-connected when options are complete but there is no Google session', () => {

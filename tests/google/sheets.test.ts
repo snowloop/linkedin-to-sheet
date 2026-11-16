@@ -5,8 +5,6 @@ vi.mock('../../utils/google/auth', () => ({
   getValidAccessToken: vi.fn().mockResolvedValue('fake-access-token'),
   googleSettingsItem: {
     getValue: vi.fn().mockResolvedValue({
-      clientId: 'id',
-      clientSecret: 'secret',
       spreadsheetId: 'sheet-123',
       sheetName: 'Sheet1',
     }),

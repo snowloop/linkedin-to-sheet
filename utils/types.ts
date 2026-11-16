@@ -65,8 +65,6 @@ export interface GoogleAuthTokens {
 }
 
 export interface GoogleSettings {
-  clientId: string;
-  clientSecret: string;
   spreadsheetId: string;
   sheetName: string;
 }

@@ -83,21 +83,24 @@ npm install
 the `.wxt/` folder with TypeScript types for `wxt.config.ts`'s
 `defineConfig`, `defineBackground`, `defineContentScript`, etc.)
 
-### 2. Create a Google Cloud OAuth client
+### 2. Create the Google Cloud OAuth client (maintainer, once)
 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and
    create a new project (or reuse one).
 2. **APIs & Services → Library**: enable the **Google Sheets API**.
-3. **APIs & Services → OAuth consent screen**: choose **External**, fill in
-   the required fields, keep the publishing status as **Testing**, and add
-   your own Google account under **Test users**. You don't need to submit
-   for verification for personal use.
+3. **APIs & Services → OAuth consent screen**: choose **External** and fill
+   in the required fields. While the status is **Testing**, only the listed
+   test users can connect and refresh tokens expire after 7 days; publish
+   and verify the app before a public release.
 4. **APIs & Services → Credentials → Create credentials → OAuth client ID**:
    choose application type **Desktop app**. This matters — this extension
    uses the installed-app/PKCE flow with a loopback redirect URI
    (`http://127.0.0.1/mozoauth2/...`), which only "Desktop app" clients
    accept without manual redirect-URI registration.
-5. Copy the generated **Client ID** and **Client Secret**.
+5. Copy `.env.example` to `.env` and paste the **Client ID** and **Client
+   Secret** into `WXT_GOOGLE_CLIENT_ID` / `WXT_GOOGLE_CLIENT_SECRET`. They
+   are baked into the extension at build time; users never see or enter
+   them. `.env` is git-ignored. Rebuild after changing it.
 
 ### 3. Prepare your Google Sheet
 
@@ -121,8 +124,7 @@ on demand the first time — if it asks, install it as a dev dependency).
 
 1. Click the toolbar icon → **Options** (or go to `about:addons`, find the
    extension, and open its preferences).
-2. Paste the **Client ID**, **Client Secret**, **Spreadsheet ID** and
-   **Sheet name**, then **Save settings**.
+2. Enter the **Spreadsheet ID** and **Sheet name**, then **Save settings**.
 3. Click **Connect Google account** and go through the Google consent
    screen (you'll see an "unverified app" warning — click
    **Advanced → Go to (app name)** since you're the developer/test user).

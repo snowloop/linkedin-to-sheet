@@ -5,8 +5,6 @@ export type SetupProblem =
   | { kind: 'not-connected'; message: string };
 
 const REQUIRED_SETTINGS: { key: keyof GoogleSettings; label: string }[] = [
-  { key: 'clientId', label: 'Client ID' },
-  { key: 'clientSecret', label: 'Client Secret' },
   { key: 'spreadsheetId', label: 'Spreadsheet ID' },
 ];
 
@@ -29,7 +27,7 @@ export function getSetupProblem(
       kind: 'missing-settings',
       missing,
       message: everything
-        ? 'The extension is not configured yet. Fill in the Google Client ID, Client Secret and Spreadsheet ID in the options.'
+        ? 'The extension is not configured yet. Fill in the Spreadsheet ID in the options.'
         : `The options are incomplete. Missing: ${missing.join(', ')}.`,
     };
   }
