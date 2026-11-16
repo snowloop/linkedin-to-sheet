@@ -124,6 +124,7 @@ export async function getValidAccessToken(): Promise<string> {
   if (stillValid) return tokens.accessToken;
 
   if (!tokens.refreshToken) {
+    await googleTokensItem.removeValue();
     throw new Error(
       'Google session expired and cannot be refreshed. Please reconnect your Google account in the options page.',
     );

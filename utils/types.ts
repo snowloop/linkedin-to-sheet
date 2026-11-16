@@ -71,3 +71,7 @@ export interface GoogleSettings {
 
 export type SaveRowResult = { ok: true } | { ok: false; error: string };
 export type ConnectResult = { ok: true } | { ok: false; error: string };
+/** Outcome of checking that a spreadsheet exists; `tabs` are its sheet (tab) names, in order. */
+export type VerifySpreadsheetResult =
+  | { ok: true; title: string; tabs: string[] }
+  | { ok: false; error: string };

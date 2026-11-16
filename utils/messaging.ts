@@ -4,6 +4,7 @@ import type {
   ProspectRow,
   SaveRowResult,
   ScrapedCompanyData,
+  VerifySpreadsheetResult,
 } from './types';
 
 /**
@@ -19,8 +20,13 @@ export interface ProtocolMap {
   connectGoogleAccount(): ConnectResult;
   /** Options page -> background: forget stored Google tokens. */
   disconnectGoogleAccount(): void;
-  /** Popup/options -> background: whether we currently hold Google tokens. */
+  /**
+   * Popup/options -> background: whether we hold a usable Google session.
+   * Renews the access token if needed, so a dead session is dropped here.
+   */
   getConnectionStatus(): { connected: boolean };
+  /** Options page -> background: check the spreadsheet exists and list its tabs. */
+  verifySpreadsheet(spreadsheetId: string): VerifySpreadsheetResult;
 }
 
 export const { sendMessage, onMessage } = defineExtensionMessaging<ProtocolMap>();

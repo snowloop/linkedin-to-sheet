@@ -11,7 +11,7 @@ vi.mock('../../utils/google/auth', () => ({
   },
 }));
 
-const { saveProspectRow, quoteSheetName } = await import('../../utils/google/sheets');
+const { saveProspectRow, quoteSheetName, verifySpreadsheet } = await import('../../utils/google/sheets');
 
 function makeRow(overrides: Partial<ProspectRow> = {}): ProspectRow {
   return {
@@ -80,6 +80,48 @@ describe('saveProspectRow', () => {
     const updateCall = fetchMock.mock.calls[2]!;
     expect(String(updateCall[0])).toContain('A2%3AM2');
     expect(updateCall[1]?.method).toBe('PUT');
+  });
+});
+
+describe('verifySpreadsheet', () => {
+  let fetchMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('returns the title and the tab names of an existing spreadsheet', async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse({
+        properties: { title: 'Prospection' },
+        sheets: [{ properties: { title: 'Sheet1' } }, { properties: { title: 'Mes prospects' } }],
+      }),
+    );
+
+    await expect(verifySpreadsheet('sheet-123')).resolves.toEqual({
+      ok: true,
+      title: 'Prospection',
+      tabs: ['Sheet1', 'Mes prospects'],
+    });
+    expect(String(fetchMock.mock.calls[0]![0])).toContain('/sheet-123?fields=');
+  });
+
+  it.each([
+    [404, 'not found'],
+    [403, 'cannot access'],
+    [400, 'valid spreadsheet ID'],
+  ])('explains a %i response', async (status, expected) => {
+    fetchMock.mockResolvedValueOnce(new Response('{}', { status }));
+
+    const result = await verifySpreadsheet('nope');
+
+    expect(result.ok).toBe(false);
+    expect(!result.ok && result.error).toContain(expected);
   });
 });
 

@@ -27,14 +27,15 @@
         <h2>2. Google Sheet</h2>
         <label>
           Spreadsheet ID
-          <input name="spreadsheetId" type="text" placeholder="From the sheet's URL" />
+          <input name="spreadsheetId" type="text" placeholder="From the sheet's URL" autocomplete="off" />
         </label>
+        <p id="spreadsheet-status" class="status"></p>
         <label>
           Sheet / tab name
-          <input name="sheetName" type="text" placeholder="Sheet1" />
+          <select name="sheetName"></select>
         </label>
 
-        <button type="submit" id="save-settings-btn">Save settings</button>
+        <button type="submit" id="save-settings-btn" disabled>Save settings</button>
       </form>
 
       <p id="save-feedback" class="status"></p>

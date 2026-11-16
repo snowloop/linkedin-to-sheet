@@ -124,10 +124,13 @@ on demand the first time — if it asks, install it as a dev dependency).
 
 1. Click the toolbar icon → **Options** (or go to `about:addons`, find the
    extension, and open its preferences).
-2. Enter the **Spreadsheet ID** and **Sheet name**, then **Save settings**.
-3. Click **Connect Google account** and go through the Google consent
+2. Click **Connect Google account** and go through the Google consent
    screen (you'll see an "unverified app" warning — click
    **Advanced → Go to (app name)** since you're the developer/test user).
+3. Once connected, enter the **Spreadsheet ID**. The extension checks that
+   the spreadsheet exists, then lets you pick the **tab** from a menu.
+   Click **Save settings**. These fields stay disabled while you are not
+   connected (including after the Google session expires).
 
 ### 6. Use it
 

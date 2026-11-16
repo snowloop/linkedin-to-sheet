@@ -2,9 +2,10 @@ import { defineBackground } from 'wxt/utils/define-background';
 import {
   connectGoogleAccount,
   disconnectGoogleAccount,
+  getValidAccessToken,
   isGoogleConnected,
 } from '../utils/google/auth';
-import { saveProspectRow } from '../utils/google/sheets';
+import { saveProspectRow, verifySpreadsheet } from '../utils/google/sheets';
 import { onMessage } from '../utils/messaging';
 
 export default defineBackground(() => {
@@ -18,8 +19,13 @@ export default defineBackground(() => {
   });
 
   onMessage('getConnectionStatus', async () => {
+    // Renewing the token here makes a revoked/expired session drop its tokens
+    // now, instead of at the next save. Failures are reflected by the status.
+    await getValidAccessToken().catch(() => undefined);
     return { connected: await isGoogleConnected() };
   });
+
+  onMessage('verifySpreadsheet', (message) => verifySpreadsheet(message.data));
 
   onMessage('disconnectGoogleAccount', async () => {
     await disconnectGoogleAccount();

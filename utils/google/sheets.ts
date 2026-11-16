@@ -1,4 +1,4 @@
-import { SHEET_COLUMNS, type ProspectRow } from '../types';
+import { SHEET_COLUMNS, type ProspectRow, type VerifySpreadsheetResult } from '../types';
 import { getValidAccessToken, googleSettingsItem } from './auth';
 
 const SHEETS_API_BASE = 'https://sheets.googleapis.com/v4/spreadsheets';
@@ -15,10 +15,19 @@ export const SHEET_HEADER_LABELS = [
   'Notes',
 ] satisfies readonly string[];
 
-const LAST_COLUMN_LETTER = 'M'; // Must match SHEET_COLUMNS.length (13 columns -> A..M).
+const LAST_COLUMN_LETTER = 'H'; // Must match SHEET_COLUMNS.length (13 columns -> A..M).
 
 function rowToValues(row: ProspectRow): (string | number)[] {
   return SHEET_COLUMNS.map((column) => row[column]);
+}
+
+class SheetsApiError extends Error {
+  readonly status: number;
+
+  constructor(status: number, body: string) {
+    super(`Google Sheets API error (${status}): ${body}`);
+    this.status = status;
+  }
 }
 
 async function sheetsApiFetch(path: string, init?: RequestInit): Promise<unknown> {
@@ -34,10 +43,33 @@ async function sheetsApiFetch(path: string, init?: RequestInit): Promise<unknown
   });
 
   if (!response.ok) {
-    throw new Error(`Google Sheets API error (${response.status}): ${await response.text()}`);
+    throw new SheetsApiError(response.status, await response.text());
   }
 
   return response.json();
+}
+
+function describeSpreadsheetError(error: unknown): string {
+  if (error instanceof SheetsApiError) {
+    if (error.status === 404) return 'Spreadsheet not found. Check the ID.';
+    if (error.status === 403) return 'This Google account cannot access this spreadsheet.';
+    if (error.status === 400) return "This doesn't look like a valid spreadsheet ID.";
+  }
+  return error instanceof Error ? error.message : String(error);
+}
+
+/** Checks that the spreadsheet exists and is readable, and returns its title and tab names. */
+export async function verifySpreadsheet(spreadsheetId: string): Promise<VerifySpreadsheetResult> {
+  try {
+    const data = (await sheetsApiFetch(
+      `/${encodeURIComponent(spreadsheetId)}?fields=properties.title,sheets.properties.title`,
+    )) as { properties?: { title?: string }; sheets?: { properties?: { title?: string } }[] };
+
+    const tabs = (data.sheets ?? []).flatMap((sheet) => sheet.properties?.title ?? []);
+    return { ok: true, title: data.properties?.title ?? '', tabs };
+  } catch (error) {
+    return { ok: false, error: describeSpreadsheetError(error) };
+  }
 }
 
 /** A1 notation requires tab names with spaces/special characters to be single-quoted. */

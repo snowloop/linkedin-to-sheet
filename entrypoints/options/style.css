@@ -54,7 +54,8 @@ label {
   font-size: 12px;
 }
 
-input {
+input,
+select {
   width: 100%;
   font: inherit;
   padding: 8px 10px;
@@ -62,6 +63,14 @@ input {
   border-radius: 6px;
   color: #202124;
   font-weight: 400;
+  background: #fff;
+}
+
+input:disabled,
+select:disabled {
+  background: #f1f3f4;
+  color: #80868b;
+  cursor: not-allowed;
 }
 
 button {
@@ -95,4 +104,16 @@ button:disabled {
   color: #5f6368;
   font-size: 12px;
   min-height: 16px;
+}
+
+form .status {
+  margin: 0;
+}
+
+.status.error {
+  color: #d93025;
+}
+
+.status.ok {
+  color: #188038;
 }
