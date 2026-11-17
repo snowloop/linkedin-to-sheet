@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy – Linkedin to Sheet</title>
+  <style>
+    body { font: 16px/1.6 system-ui, sans-serif; max-width: 46rem; margin: 2rem auto; padding: 0 1rem; color: #1f2328; }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.2rem; margin-top: 2rem; }
+    a { color: #0a66c2; }
+    .updated { color: #59636e; }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy – Linkedin to Sheet</h1>
+  <p class="updated">Last updated: November 17, 2026</p>
+
+  <p>
+    “Linkedin to Sheet” (the “extension”) is a browser extension for Firefox and
+    Chrome that reads the company information displayed on a LinkedIn company page
+    and saves it, at the user's request, as a row in a Google Sheet that belongs to
+    the user. This policy explains what data the extension handles and how.
+  </p>
+
+  <h2>Summary</h2>
+  <ul>
+    <li>The extension has no server. The developer does not receive, collect or store any of your data.</li>
+    <li>No analytics, tracking, advertising or telemetry of any kind.</li>
+    <li>Your data goes only to Google's APIs, to your own Google Sheet, when you click Save.</li>
+  </ul>
+
+  <h2>Data the extension handles</h2>
+  <h3>Website content (LinkedIn company pages)</h3>
+  <p>
+    When you open the extension popup on a LinkedIn company page, the extension reads
+    the company information visible on that page (name, website, LinkedIn URL,
+    industry, company size, location) to pre-fill a form. This happens only on
+    LinkedIn pages and only when you open the popup. You can edit every field, and
+    add a free-text note, before saving. Nothing is sent anywhere until you click
+    Save.
+  </p>
+
+  <h3>Authentication information (Google sign-in)</h3>
+  <p>
+    When you click “Connect Google account”, you sign in through Google's standard
+    OAuth 2.0 consent screen. The extension never sees your Google password. It
+    receives an access token and a refresh token, which it stores locally in the
+    browser's extension storage (<code>storage.local</code>) so you stay connected.
+    It requests the narrowest scope it needs,
+    <code>https://www.googleapis.com/auth/drive.file</code>, which limits access to
+    the files you create or explicitly open with the extension.
+  </p>
+
+  <h3>Settings</h3>
+  <p>
+    The spreadsheet ID and the sheet tab name you choose are stored locally in the
+    browser's extension storage.
+  </p>
+
+  <h2>How the data is used</h2>
+  <ul>
+    <li>The page content is used only to pre-fill the form and, once you click Save, to write a row in your Google Sheet through the Google Sheets API.</li>
+    <li>The tokens are used only to authenticate requests to Google's APIs (<code>sheets.googleapis.com</code> and <code>oauth2.googleapis.com</code>).</li>
+    <li>Data is never sold, shared with third parties, used for advertising, or used to determine creditworthiness.</li>
+  </ul>
+
+  <h2>Google API Services User Data Policy</h2>
+  <p>
+    The use and transfer to any other app of information received from Google APIs
+    by Linkedin to Sheet will adhere to the
+    <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>,
+    including the Limited Use requirements.
+  </p>
+
+  <h2>Storage, retention and deletion</h2>
+  <p>
+    All data is stored on your device. Click “Disconnect” in the extension options
+    page to delete the Google tokens, or uninstall the extension to delete everything
+    it stores. You can also revoke the extension's access at any time in your
+    <a href="https://myaccount.google.com/permissions">Google Account permissions</a>.
+    Rows already written to your Google Sheet remain in your spreadsheet, which you
+    control.
+  </p>
+
+  <h2>Permissions</h2>
+  <ul>
+    <li><strong>storage</strong>: keep your settings and Google tokens locally.</li>
+    <li><strong>identity</strong>: run the Google sign-in flow.</li>
+    <li><strong>activeTab</strong>: read the URL of the tab you are on when you open the popup.</li>
+    <li><strong>Access to linkedin.com</strong>: read the company information on LinkedIn company pages.</li>
+    <li><strong>Access to sheets.googleapis.com and oauth2.googleapis.com</strong>: write to your Google Sheet and manage the sign-in tokens.</li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>The extension is not directed at children under 13 and does not knowingly handle their data.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>
+    If this policy changes, the updated version will be published at this address
+    with a new “Last updated” date.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    For any question, open an issue at
+    <a href="https://github.com/snowloop/linkedin-to-sheet/issues">github.com/snowloop/linkedin-to-sheet/issues</a>.
+  </p>
+</body>
+</html>
