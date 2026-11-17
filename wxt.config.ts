@@ -9,7 +9,7 @@ export default defineConfig({
   manifest: ({ browser }) => ({
     name: 'Linkedin to Sheet',
     description: 'Send company info from LinkedIn company pages and websites to a Google Sheet.',
-    permissions: ['storage', 'identity', 'tabs'],
+    permissions: ['storage', 'identity', 'activeTab'],
     host_permissions: [
       // Token exchange / refresh endpoint.
       'https://oauth2.googleapis.com/*',

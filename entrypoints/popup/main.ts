@@ -76,7 +76,7 @@ async function rescan(): Promise<void> {
   // Blank tabs and browser pages can never be scanned: explain it calmly
   // instead of failing with a connection error.
   if (!isScrapableUrl(tab.url)) {
-    setStatus('Nothing to scan on this tab. Open a company website or a LinkedIn company page, or fill the fields manually.');
+    setStatus('Nothing to scan on this tab. Open a LinkedIn company page, or fill the fields manually.');
     return;
   }
 

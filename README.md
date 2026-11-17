@@ -1,7 +1,7 @@
 # Linkedin to Sheet
 
-A Firefox extension that captures company info from a LinkedIn company page
-or a company website, and writes it as a row to a Google Sheet — with a
+A Firefox and Chrome extension that captures company info from a LinkedIn
+company page, and writes it as a row to a Google Sheet — with a
 manual star rating, status, notes and HR contact fields.
 
 Built with [WXT](https://wxt.dev/) (Vite + TypeScript based web extension
@@ -9,7 +9,7 @@ framework).
 
 ## What it does
 
-- Open the toolbar popup on a company website or a LinkedIn company page
+- Open the toolbar popup on a LinkedIn company page
   (best on the **À propos / About** tab). It scrapes best-effort info from
   the current page (name, website URL, LinkedIn URL, industry, size,
   location) and pre-fills the form. The **Re-scan current page** button
@@ -48,7 +48,7 @@ right person on LinkedIn.
 
 ## Known limitations
 
-- **Scraping is best-effort.** Company websites vary wildly, and LinkedIn's
+- **Scraping is best-effort.** LinkedIn's
   markup changes often and mostly renders for logged-in users. Every
   scraped field is shown as an editable input in the popup — wrong or empty
   guesses are a minor inconvenience, not a blocker. If LinkedIn changes its
@@ -63,12 +63,8 @@ right person on LinkedIn.
   refresh tokens after 7 days of inactivity or when the test-user list
   changes. If saving starts failing with an auth error, just click
   "Reconnect Google account" in the options page.
-- Small content scripts run on all websites so the popup can read the
-  current page; Firefox will ask for the broad "access
-  your data for all websites" permission once at install. If you'd rather
-  restrict it, edit the `matches` pattern in
-  [`entrypoints/generic.content.ts`](entrypoints/generic.content.ts) to a
-  specific allowlist. Tabs that were already open when the extension was
+- Small content script runs on LinkedIn pages only so the popup can read
+  the current page. Tabs that were already open when the extension was
   installed or reloaded must be refreshed once before they can be scanned.
 
 ## One-time setup
@@ -135,7 +131,7 @@ on demand the first time — if it asks, install it as a dev dependency).
 
 ### 6. Use it
 
-1. Browse to a company website, or a LinkedIn company page (the **À propos**
+1. Browse to a LinkedIn company page (the **À propos**
    tab gives the most data).
 2. Click the toolbar icon: the form is pre-filled from the page.
 3. Review/edit the fields, set stars/status/notes, paste the HR contact if
@@ -156,8 +152,8 @@ The same code base builds for Chrome (Manifest V3).
    you move the folder; the published ID never changes.
 4. `pnpm build:chrome` to test, `pnpm zip:chrome` to produce the zip to
    upload. The store listing needs a privacy policy URL (the extension
-   handles Google account data) and a justification for the "all sites"
-   content-script access.
+   handles Google account data). Permissions are `storage`, `identity` and
+   `activeTab`, with a content script limited to `linkedin.com`.
 
 ## Development
 
